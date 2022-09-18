@@ -42,6 +42,7 @@ group :development, :test do
   gem 'simplecov'
   gem 'shoulda-matchers', '~> 3.1'
   gem 'orderly'
+  gem 'faker'
 end
 
 group :development do

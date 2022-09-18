@@ -1,0 +1,17 @@
+<h1 id ="dish_name">
+  <%=@dish.name%>
+</h1>
+<h2 id="dish_chef">
+  Made by: <%=@dish.chef.name%>
+</h2>
+<p id= "dish_description">
+  Description: <%= @dish.description %>
+</p>
+<h4>Ingredients</h4>
+<ul id ="dish_ingredients">
+  <% @dish.ingredients.each do |ingredient|%>
+    <li id="ingredient_<%=ingredient.id%>">
+      <%= ingredient.name%>
+    </li>
+  <% end%>
+</ul>
