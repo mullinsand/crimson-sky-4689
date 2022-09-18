@@ -5,17 +5,17 @@ RSpec.describe 'Dish show page' do
   before :each do
     @chef1 = Chef.create!(name: Faker::Name.name)
     @chef2 = Chef.create!(name: Faker::Name.name)
-    @pie = @chef1.dishes.create!(name: Faker::Food.dish, description: Faker::Food.description)
-    @stroodle = @chef1.dishes.create!(name: Faker::Food.dish, description: Faker::Food.description)
-    @other_dish = @chef2.dishes.create!(name: Faker::Food.dish, description: Faker::Food.description)
+    @pie = @chef1.dishes.create!(name: Faker::Food.unique.dish, description: Faker::Food.unique.description)
+    @stroodle = @chef1.dishes.create!(name: Faker::Food.unique.dish, description: Faker::Food.unique.description)
+    @other_dish = @chef2.dishes.create!(name: Faker::Food.unique.dish, description: Faker::Food.unique.description)
 
-    @ing1 = @pie.ingredients.create!(name: Faker::Food.ingredient, calories: Faker::Number.between(from: 1, to: 5000))
-    @ing2 = @pie.ingredients.create!(name: Faker::Food.ingredient, calories: Faker::Number.between(from: 1, to: 5000))
-    @ing3 = @pie.ingredients.create!(name: Faker::Food.ingredient, calories: Faker::Number.between(from: 1, to: 5000))
-    @ing4 = @pie.ingredients.create!(name: Faker::Food.ingredient, calories: Faker::Number.between(from: 1, to: 5000))
+    @ing1 = @pie.ingredients.create!(name: Faker::Food.unique.ingredient, calories: Faker::Number.between(from: 1, to: 5000))
+    @ing2 = @pie.ingredients.create!(name: Faker::Food.unique.ingredient, calories: Faker::Number.between(from: 1, to: 5000))
+    @ing3 = @pie.ingredients.create!(name: Faker::Food.unique.ingredient, calories: Faker::Number.between(from: 1, to: 5000))
+    @ing4 = @pie.ingredients.create!(name: Faker::Food.unique.ingredient, calories: Faker::Number.between(from: 1, to: 5000))
     @stroodle.ingredients << @ing1
     @stroodle.ingredients << @ing2
-    @ing5 = @stroodle.ingredients.create!(name: Faker::Food.ingredient, calories: Faker::Number.between(from: 1, to: 5000))
+    @ing5 = @stroodle.ingredients.create!(name: Faker::Food.unique.ingredient, calories: Faker::Number.between(from: 1, to: 5000))
     @other_dish.ingredients << @ing2
     @other_dish.ingredients << @ing3
 
@@ -52,6 +52,13 @@ RSpec.describe 'Dish show page' do
         within "#dish_chef" do
           expect(page).to have_content(@chef1.name)
           expect(page).to_not have_content(@chef2.name)
+        end
+      end
+
+      it 'has total calorie count for dish' do
+        total_pie_calories = @ing1.calories + @ing2.calories + @ing3.calories + @ing4.calories
+        within "#total_calories" do
+          expect(page).to have_content(total_pie_calories)
         end
       end
     end

@@ -1,0 +1,12 @@
+<h1 id ="chef_name">
+  <%=@chef.name%>
+</h1>
+<%=link_to "Chef's Ingredients", chef_ingredients_path(@chef)%>
+<h4>Popular Ingredients</h4>
+<ul id ="popular_ingredients">
+  <% @chef.top_three_popular_ingredients each do |ingredient|%>
+    <li id="pop_ingredient_<%=ingredient.id%>">
+      <%= ingredient.name%>
+    </li>
+  <% end%>
+</ul>

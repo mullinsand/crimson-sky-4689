@@ -1,6 +1,7 @@
 require 'rails_helper'
+require 'faker'
 
-RSpec.describe Dish, type: :model do
+RSpec.describe 'Chef Ingredients index page' do
   before :each do
     Faker::Lorem.unique.clear
     Faker::Food.unique.clear
@@ -19,36 +20,24 @@ RSpec.describe Dish, type: :model do
     @ing5 = @stroodle.ingredients.create!(name: Faker::Food.unique.ingredient, calories: Faker::Number.between(from: 1, to: 5000))
     @other_dish.ingredients << @ing2
     @other_dish.ingredients << @ing3
-    @water = @chef1.dishes.create!(name: 'water', description: 'just water')
+    @ing6 = @other_dish.ingredients.create!(name: Faker::Food.unique.ingredient, calories: Faker::Number.between(from: 1, to: 5000))
+
+
+    visit chef_ingredients_path(@chef1)
   end
 
-  describe "validations" do
-    it {should validate_presence_of :name}
-    it {should validate_presence_of :description}
-  end
-  describe "relationships" do
-    it {should belong_to :chef}
-    it {should have_many :dish_ingredients}
-    it {should have_many(:ingredients).through(:dish_ingredients)}
-  end
-
-  describe 'dish methods' do
-    describe '#total_calories' do
-      it 'sums the calories of all ingredients in that dish' do
-        total_pie_calories = @ing1.calories + @ing2.calories + @ing3.calories + @ing4.calories
-        total_stroodle_calories = @ing1.calories + @ing2.calories + @ing5.calories
-        total_other_dish_calories = @ing2.calories + @ing3.calories
-        expect(@pie.total_calories).to eq(total_pie_calories)
-        expect(@stroodle.total_calories).to eq(total_stroodle_calories)
-        expect(@other_dish.total_calories).to eq(total_other_dish_calories)
-      end
-
-      context 'when there are no ingredients in that dish' do
-        it 'returns 0' do
-          expect(@water.total_calories).to eq(0)
+  describe 'as a user'
+    describe 'visit the chef ingredient index page' do
+      it 'has a unique list of all ingredients this chef uses' do
+        chef_ingredients = [@ing1, @ing2, @ing3, @ing4, @ing5]
+        within "#chef_ingredients" do
+          chef_ingredients.each do |ingredient|
+            within "#ingredient_#{ingredient.id}" do
+              expect(page).to have_content(ingredient.name)
+              expect(page).to_not have_content(@ing6.name)
+            end
+          end
         end
       end
     end
-
-  end
 end
